@@ -40,13 +40,11 @@ class _HttpApiState extends State<HttpApi> {
             ? ListView.builder(
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(data[index]["state"]),
-                  )
+                    // title: Text(data[index]["name"]),
+                  );
                 },
-                itemCount: data.length
-        )
-            : Center(
-            child: CircularProgressIndicator()),
+                itemCount: data.length)
+            : Center(child: CircularProgressIndicator()),
       ),
     );
   }
