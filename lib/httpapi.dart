@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'dart:developer';
 class HttpApi extends StatefulWidget {
   const HttpApi({Key? key}) : super(key: key);
 
@@ -25,6 +25,7 @@ class _HttpApiState extends State<HttpApi> {
   getData() async {
     var res = await http.get(url);
     data = jsonDecode(res.body);
+     print(res.body);
     setState(() {});
   }
 
@@ -40,7 +41,8 @@ class _HttpApiState extends State<HttpApi> {
             ? ListView.builder(
                 itemBuilder: (context, index) {
                   return ListTile(
-                    // title: Text(data[index]["name"]),
+
+                    title: Text(data[index]["name"]),
                   );
                 },
                 itemCount: data.length)
