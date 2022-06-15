@@ -41,7 +41,7 @@ class _HttpApiState extends State<HttpApi> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(data[index]["state"]),
-                  );
+                  )
                 },
                 itemCount: data.length
         )
