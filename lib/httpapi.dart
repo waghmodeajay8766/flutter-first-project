@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:developer';
+
 class HttpApi extends StatefulWidget {
   const HttpApi({Key? key}) : super(key: key);
 
@@ -10,11 +10,8 @@ class HttpApi extends StatefulWidget {
 }
 
 class _HttpApiState extends State<HttpApi> {
-  TextEditingController _nameController = TextEditingController();
+  // TextEditingController _nameController = TextEditingController();
   var myText = "Change Me";
-  var url = Uri.parse(
-      "https://jq3ocxrkr6.execute-api.ap-south-1.amazonaws.com/dev/booking-enquire/all");
-  var data;
 
   @override
   void initState() {
@@ -22,32 +19,58 @@ class _HttpApiState extends State<HttpApi> {
     getData();
   }
 
-  getData() async {
-    var res = await http.get(url);
-    data = jsonDecode(res.body);
-     print(res.body);
-    setState(() {});
+  Future getData() async {
+    var res =
+        await http.get(Uri.https('jsonplaceholder.typicode.com', 'posts'));
+    var jsonData = jsonDecode(res.body);
+    List<User> users = [];
+
+    for (var u in jsonData) {
+      User user = User(u['userId'], u['Id'], u['title'], u['body']);
+      users.add(user);
+    }
+    print(users.length);
+    return users;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Second Page"),
+        title: Text("Second Page"),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: data != null
-            ? ListView.builder(
-                itemBuilder: (context, index) {
-                  return ListTile(
+      body: Container(
+        child: Card(
+          child: FutureBuilder(
+            future: getData(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.data == null) {
+                return Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: (snapshot.data.length),
+                    itemBuilder: (context, i) {
+                      return ListTile(
+                        title: Text((snapshot.data as dynamic)[i].title),
+                        subtitle: Text((snapshot.data as dynamic)[i].body),
+                        // leading: Text((snapshot.data as dynamic)[i].id),
 
-                    title: Text(data[index]["name"]),
-                  );
-                },
-                itemCount: data.length)
-            : Center(child: CircularProgressIndicator()),
+                      );
+                    });
+              }
+            },
+          ),
+        ),
       ),
     );
   }
+}
+
+class User {
+  final userId, Id, title, body;
+  User(this.userId, this.Id, this.title, this.body);
 }
